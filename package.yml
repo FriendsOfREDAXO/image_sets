@@ -1,0 +1,38 @@
+package: image_sets
+version: '0.1.0'
+author: 'Friends Of REDAXO'
+supportpage: 'https://github.com/FriendsOfREDAXO/image_sets'
+license: MIT
+
+requires:
+    packages:
+        media_manager: '*'
+    redaxo: '^5.20.1'
+    php:
+        version: '^8.1'
+
+installer_ignore:
+    - .github
+    - .gitignore
+    - API.md
+
+# Backend-Seiten als Unterbereich des Media Managers (wie ffmpeg im Medienpool)
+pages:
+    media_manager/image_sets:
+        title: 'translate:image_sets_page_title'
+        perm: admin
+        icon: rex-icon fa-image
+        subpages:
+            overview:
+                title: 'translate:image_sets_title'
+                icon: rex-icon fa-list
+            sets:
+                title: 'translate:image_sets_sets'
+                icon: rex-icon fa-sliders
+            demo:
+                title: 'translate:image_sets_demo'
+                icon: rex-icon fa-play-circle
+            help:
+                title: 'translate:image_sets_help'
+                icon: rex-icon fa-question-circle
+                subPath: README.md
