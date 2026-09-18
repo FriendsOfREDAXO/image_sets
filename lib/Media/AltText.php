@@ -10,10 +10,11 @@ use rex_sql;
  * Alt-Text eines Medienpool-Bildes ermitteln.
  *
  * Reihenfolge: MediaPlace-eigenes Alt-Feld (JSON in med_json_data, Text je
- * Sprache plus "decorative"-Flag) -> klassisches Metainfo-Feld med_alt (plus
- * med_alt_decorative) -> leer. Der Medienpool-Titel ist bewusst KEIN
- * Fallback: ein Titel beschreibt das Bild nicht fuer Screenreader. Ohne
- * Alt-Text wird das Bild dekorativ ausgegeben (alt="" role="presentation").
+ * Sprache plus "decorative"-Flag) -> mehrsprachiges Metainfo-Feld med_alt
+ * (lang_text ueber metainfo_lang_fields, plus med_alt_decorative) -> leer.
+ * Der Medienpool-Titel ist bewusst KEIN Fallback: ein Titel beschreibt das
+ * Bild nicht fuer Screenreader. Ohne Alt-Text wird das Bild dekorativ
+ * ausgegeben (alt="" role="presentation").
  */
 final class AltText
 {
@@ -75,8 +76,8 @@ final class AltText
         if (self::hasColumn(self::CLASSIC_DECORATIVE_FIELD) && (bool) $media->getValue(self::CLASSIC_DECORATIVE_FIELD)) {
             return ['alt' => '', 'decorative' => true];
         }
-        if (self::hasColumn('med_alt')) {
-            $alt = trim((string) $media->getValue('med_alt'));
+        if (self::hasColumn('med_alt') && rex_addon::get('metainfo_lang_fields')->isAvailable() && class_exists('FriendsOfRedaxo\\MetaInfoLangFields\\MetainfoLangHelper')) {
+            $alt = trim(\FriendsOfRedaxo\MetaInfoLangFields\MetainfoLangHelper::getMediaValue($media, 'med_alt', $clangId));
             if ($alt !== '') {
                 return ['alt' => $alt, 'decorative' => false];
             }
